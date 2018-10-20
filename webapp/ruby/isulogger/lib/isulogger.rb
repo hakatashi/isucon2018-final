@@ -23,7 +23,7 @@ class Isulogger
   # @return [NilClass]
   # @raise [Error]
   def send(tag, data)
-    response, err = request('/send', tag: tag, time: Time.now.xmlschema, data: data)
+    response, err = request('/send_log', tag: tag, time: Time.now.xmlschema, data: data)
     unless err
       return nil
     end
