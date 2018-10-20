@@ -16,7 +16,7 @@ module Isucoin
         if order.fetch('closed_at')
           raise OrderAlreadyClosed
         end
-        order[:user] = get_user_by_id_with_lock(order.fetch('user_id'))
+        order[:user] = get_user_by_id(order.fetch('user_id'))
         order
       end
 
@@ -49,7 +49,7 @@ module Isucoin
           raise ParameterInvalid
         end
 
-        user = get_user_by_id_with_lock(user_id)
+        user = get_user_by_id(user_id)
         raise Error.new("no user with id=#{user_id}") unless user 
 
         case ot
@@ -89,7 +89,7 @@ module Isucoin
       end
 
       def delete_order(user_id, order_id, reason)
-        user = get_user_by_id_with_lock(user_id)
+        user = get_user_by_id(user_id)
         raise Error.new("no user with id=#{user_id}") unless user 
 
         order = get_order_by_id_with_lock(order_id)
