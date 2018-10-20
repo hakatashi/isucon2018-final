@@ -20,6 +20,8 @@ services:
       - ./sql:/docker-entrypoint-initdb.d
       - ./mysql/logs:/var/log/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
+    cap_add:
+      - ALL
     # development only
     ports:
       - "13306:3306"
