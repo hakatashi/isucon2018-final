@@ -148,7 +148,8 @@ module Isucoin
       if by_sec_time < lt
         by_sec_time = Time.new(lt.year, lt.month, lt.day, lt.hour, lt.min, lt.sec)
       end
-      res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
+      #res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
+      res[:chart_by_sec] = get_candlestick_data_sec(by_sec_time)
 
       by_min_time = settings.base_time - (300 * 60)
       if by_min_time < lt
