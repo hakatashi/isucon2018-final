@@ -19,7 +19,7 @@ const sendLog = qrate(async ({endpoint, app_id, payload}, done) => {
 			'Authorization': `Bearer ${app_id}`,
 		},
 	});
-	console.log(res);
+	console.log(res.data);
 	done();
 }, 10, 20);
 
