@@ -61,3 +61,10 @@ CREATE TABLE candle_by_hour (
 	INDEX idx_high (high),
 	INDEX idx_low (low)
 ) ENGINE=MEMORY;
+
+CREATE TABLE failure (
+	bank_id varbinary(191) NOT NULL,
+	`count` TINYINT NOT NULL,
+	INDEX idx_bank_id (bank_id),
+	INDEX idx_count (count)
+);
