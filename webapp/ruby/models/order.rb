@@ -20,12 +20,46 @@ module Isucoin
         order
       end
 
+      def get_open_order_by_id_simultaneously(first_id, second_id)
+        orders = get_order_by_id_with_lock_simultaneously(id)
+        raise Error.new("no order with id=#{first_id},#{second_id}") unless orders
+
+        first_order = orders[0]
+        second_order = orders[1]
+
+        if first_order.fetch('closed_at')
+          raise OrderAlreadyClosed
+        end
+        if second_order.fetch('closed_at')
+          raise OrderAlreadyClosed
+        end
+
+        first_order[:user] = get_user_by_id(first_order.fetch('user_id'))
+        second_order[:user] = get_user_by_id(second_order.fetch('user_id'))
+        [first_order, second_order]
+      end
+
+      def get_open_order_by_id_without_lock(id)
+        order = get_order_by_id(id)
+        raise Error.new("no order with id=#{id}") unless order
+
+        if order.fetch('closed_at')
+          raise OrderAlreadyClosed
+        end
+        order[:user] = get_user_by_id(order.fetch('user_id'))
+        order
+      end
+
       def get_order_by_id(id)
         db.xquery('SELECT * FROM orders WHERE id = ?', id).first
       end
 
       def get_order_by_id_with_lock(id)
         db.xquery('SELECT * FROM orders WHERE id = ? FOR UPDATE', id).first
+      end
+
+      def get_order_by_id_with_lock_simultaneously(first_id, second_id)
+        db.xquery('SELECT * FROM orders WHERE id = ? OR id = ? FOR UPDATE', first_id, second_id).to_a
       end
 
       def get_lowest_sell_order
