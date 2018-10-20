@@ -246,7 +246,7 @@ module Isucoin
           amount: order['trade_amount'],
           price: order['trade_price'],
           created_at: order['trade_created_at']
-        } if order['trade_created_at']
+        } if order['trade_price']
         order.delete('user_name')
         order.delete('trade_amount')
         order.delete('trade_price')
