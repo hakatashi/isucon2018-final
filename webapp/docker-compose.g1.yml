@@ -1,0 +1,26 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:1.15.3-alpine
+    volumes:
+      - ./nginx:/etc/nginx
+      - ./nginx/logs:/var/log/nginx
+    ports:
+      - "443:443"
+      - "80:80"
+
+  mysql:
+    image: mysql:8
+    environment:
+      - "TZ=Asia/Tokyo"
+      - "MYSQL_ROOT_PASSWORD=root"
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    # development only
+    ports:
+      - "13306:3306"
+
+volumes:
+  mysql:
