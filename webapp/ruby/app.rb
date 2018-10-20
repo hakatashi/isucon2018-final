@@ -62,6 +62,9 @@ module Isucoin
         "DELETE FROM orders WHERE created_at >= '2018-10-16 10:00:00'",
         "DELETE FROM trade WHERE created_at >= '2018-10-16 10:00:00'",
         "DELETE FROM user WHERE created_at >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_sec WHERE `date` >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_min WHERE `date` >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_hour WHERE `date` >= '2018-10-16 10:00:00'",
       ].each do |q|
         db.query(q)
       end
