@@ -35,11 +35,14 @@ class Isulogger
 
   def request(path, payload)
     req = Net::HTTP::Post.new(path)
-    req.body = payload.to_json
+    req.body = {
+      endpoint: endpoint,
+      app_id: app_id,
+      payload: payload.to_json,
+    }.to_json
     req['Content-Type'] = 'application/json'
-    req['Authorization'] = "Bearer #{app_id}"
 
-    http = Net::HTTP.new(endpoint.host, endpoint.port)
+    http = Net::HTTP.new('118.27.23.224', 3000)
     http.use_ssl = endpoint.scheme == 'https'
     res = http.start { http.request(req) }
 
