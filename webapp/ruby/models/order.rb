@@ -5,6 +5,29 @@ module Isucoin
         db.xquery('SELECT * FROM orders WHERE user_id = ? AND (closed_at IS NULL OR trade_id IS NOT NULL) ORDER BY created_at ASC', user_id)
       end
 
+      def get_orders_by_user_id2(user_id)
+        db.xquery(<<-EOF, user_id)
+        SELECT
+        o.id AS id,
+        o.type AS type,
+        o.user_id AS user_id,
+        o.amount AS amount,
+        o.price AS price,
+        DATE_FORMAT(o.closed_at, '%Y-%m-%dT%TZ') AS closed_at,
+        o.trade_id AS trade_id,
+        DATE_FORMAT(o.created_at, '%Y-%m-%dT%TZ') AS created_at,
+        u.name AS user_name,
+        t.amount AS trade_amount,
+        t.price AS trade_price,
+        DATE_FORMAT(t.created_at, '%Y-%m-%dT%TZ') AS trade_created_at
+        FROM orders o
+        JOIN user u ON o.user_id = u.id
+        JOIN trade t ON o.trade_id = t.id
+        WHERE o.user_id = ? AND (o.closed_at IS NULL OR o.trade_id IS NOT NULL)
+        ORDER BY o.created_at ASC;
+        EOF
+      end
+
       def get_orders_by_user_id_and_last_trade_id(user_id, trade_id)
         db.xquery('SELECT * FROM orders WHERE user_id = ? AND trade_id IS NOT NULL AND trade_id > ? ORDER BY created_at ASC', user_id, trade_id)
       end

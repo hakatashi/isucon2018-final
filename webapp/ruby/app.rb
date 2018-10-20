@@ -212,8 +212,23 @@ module Isucoin
 
     get '/orders', login_required: true do
       user = user_by_request()
-      orders = get_orders_by_user_id(user.fetch('id')).to_a
+      #orders = get_orders_by_user_id(user.fetch('id')).to_a
+      orders = get_orders_by_user_id2(user.fetch('id')).to_a
+      orders.each do |order|
+        order[:user] = {id: order[:user_id], name: order[:user_name]} if order[:user_name]
+        order[:trade] = {
+          id: order[:trade_id],
+          amount: order[:trade_amount],
+          price: order[:trade_price],
+          created_at: order[:trade_created_at]
+        } if order[:trade_created_at]
+        order.delete(:user_name)
+        order.delete(:trade_amount)
+        order.delete(:trade_price)
+        order.delete(:trade_created_at)
+      end
 
+=begin
       orders.each do |order|
         fetch_order_relation(order)
         order[:user] = {id: order.dig(:user, 'id'), name: order.dig(:user, 'name')} if order[:user]
@@ -221,6 +236,7 @@ module Isucoin
         order['created_at'] = order['created_at'].xmlschema if order['created_at']
         order['closed_at'] = order['closed_at'].xmlschema if order['closed_at']
       end
+=end
 
       orders.to_json
     end
