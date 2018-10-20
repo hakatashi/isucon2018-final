@@ -78,7 +78,7 @@ module Isucoin
         trade_id = db.last_id
 
         candle_sec = db.xquery('SELECT * FROM candle_by_sec WHERE `date`= NOW(0)')
-        if candle_sec
+        if candle_sec.count > 0
           high = [candle_sec[:high], order['price']].max
           low = [candle_sec[:low], order['price']].min
           db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low WHERE `date ` = NOW(0)', order['price'], high, low)
