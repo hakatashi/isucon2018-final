@@ -29,6 +29,9 @@ module Isucoin
         EOF
       end
 
+      def get_candlestick_data2(mt, tf)
+      end
+
       def has_trade_chance_by_order(order_id)
         order = get_order_by_id(order_id)
         raise Error.new("no order with id=#{order_id}", order_id) unless order
@@ -76,6 +79,22 @@ module Isucoin
       def commit_reserved_order(order, targets, reserves)
         db.xquery('INSERT INTO trade (amount, price, created_at) VALUES (?, ?, NOW(6))', order.fetch('amount'), order.fetch('price'))
         trade_id = db.last_id
+
+        candle_sec = db.query('SELECT * FROM candle_by_sec WHERE `date`= NOW(0)')
+        begin
+          if candle_sec.count > 0
+            rec = candle_sec.first
+            high = [rec[:high], order['price']].max
+            low = [rec[:low], order['price']].min
+            db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low WHERE `date ` = NOW(0)', order['price'], high, low)
+          else
+            db.xquery('INSERT INTO candle_by_sec (`date`, open, close, high, low) VALUES (NOW(0), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
+          end
+        rescue => e
+          p e
+          p candle_sec
+          p candle_sec.first
+        end
 
         send_log("trade",
           trade_id: trade_id,
