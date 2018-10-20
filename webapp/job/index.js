@@ -8,8 +8,7 @@ let queue = [];
 
 app.use(bodyParser.json());
 
-const sendLog = qrate(async (_, done) => {
-	console.log(queue, _);
+const sendLog = qrate(async ({app_id, endpoint}, done) => {
 	if (queue.length > 0) {
 		const payload = queue.slice(0, 5000);
 		queue = queue.slice(5000);
