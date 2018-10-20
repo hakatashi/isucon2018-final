@@ -148,7 +148,8 @@ module Isucoin
       end
 
       def try_trade(order_id)
-        order = get_open_order_by_id_without_lock(order_id)
+        # order = get_open_order_by_id_without_lock(order_id)
+        order = get_open_order_by_id(order_id)
         rest_amount = order.fetch('amount')
         unit_price = order.fetch('price')
         reserves = []
@@ -166,9 +167,10 @@ module Isucoin
 
         target_orders.each do |to|
           begin
-            res = get_open_order_by_id_simultaneously(order_id, to.fetch('id'))
-            order = res[0]
-            to = res[1]
+            # res = get_open_order_by_id_simultaneously(order_id, to.fetch('id'))
+            # order = res[0]
+            # to = res[1]
+            to = get_open_order_by_id_without_lock(to.fetch('id'))
           rescue OrderAlreadyClosed
             next
           end
