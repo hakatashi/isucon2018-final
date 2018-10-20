@@ -22,3 +22,41 @@ CREATE INDEX idx_name ON isucoin.user (`name`) USING BTREE;
 CREATE INDEX idx_password ON isucoin.user (`password`) USING BTREE;
 CREATE INDEX idx_created_at ON isucoin.user (created_at) USING BTREE;
 
+CREATE TABLE candle_by_sec (
+	`date` DATE NOT NULL,
+	open bigint(20) NOT NULL,
+	close bigint(20) NOT NULL,
+	high bigint(20) NOT NULL,
+	low bigint(20) NOT NULL,
+	INDEX idx_date (`date`),
+	INDEX idx_open (open),
+	INDEX idx_close (close),
+	INDEX idx_high (high),
+	INDEX idx_low (low)
+) ENGINE=MEMORY;
+
+CREATE TABLE candle_by_min (
+	`date` DATE NOT NULL,
+	open bigint(20) NOT NULL,
+	close bigint(20) NOT NULL,
+	high bigint(20) NOT NULL,
+	low bigint(20) NOT NULL,
+	INDEX idx_date (`date`),
+	INDEX idx_open (open),
+	INDEX idx_close (close),
+	INDEX idx_high (high),
+	INDEX idx_low (low)
+) ENGINE=MEMORY;
+
+CREATE TABLE candle_by_hour (
+	`date` DATE NOT NULL,
+	open bigint(20) NOT NULL,
+	close bigint(20) NOT NULL,
+	high bigint(20) NOT NULL,
+	low bigint(20) NOT NULL,
+	INDEX idx_date (`date`),
+	INDEX idx_open (open),
+	INDEX idx_close (close),
+	INDEX idx_high (high),
+	INDEX idx_low (low)
+) ENGINE=MEMORY;

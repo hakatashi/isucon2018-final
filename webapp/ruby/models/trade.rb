@@ -6,7 +6,7 @@ module Isucoin
       end
 
       def get_latest_trade()
-        db.xquery('SELECT * FROM trade ORDER BY id DESC').first
+        db.xquery('SELECT MAX(id) AS id FROM trade').first
       end
 
       def get_candlestick_data(mt, tf)
