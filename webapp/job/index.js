@@ -23,6 +23,8 @@ const sendLog = qrate(async (_, done) => {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${app_id}`,
 			},
+		}).catch((e) => {
+			console.log(e);
 		});
 		console.log(res.data);
 	} else {
