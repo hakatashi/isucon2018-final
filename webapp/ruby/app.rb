@@ -120,15 +120,19 @@ module Isucoin
     end
 
     get '/info' do
+      p 1
       res = {}
 
+      p 2
       last_trade_id = params[:cursor] && !params[:cursor].empty? ? params[:cursor].to_i : nil
       last_trade = last_trade_id && last_trade_id > 0 ? get_trade_by_id(last_trade_id) : nil
       lt = last_trade ? last_trade.fetch('created_at') : Time.at(0)
 
+      p 3
       latest_trade = get_latest_trade()
       res[:cursor] = latest_trade&.fetch('id')
 
+      p 4
       user = user_by_request()
       if user
         orders = get_orders_by_user_id_and_last_trade_id(user.fetch('id'), last_trade_id).to_a
@@ -142,6 +146,7 @@ module Isucoin
         res[:traded_orders] = orders
       end
 
+      p 5
       by_sec_time = settings.base_time - 300
       if by_sec_time < lt
         by_sec_time = Time.new(lt.year, lt.month, lt.day, lt.hour, lt.min, lt.sec)
@@ -149,30 +154,36 @@ module Isucoin
       res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
 
       by_min_time = settings.base_time - (300 * 60)
+      p 6
       if by_min_time < lt
         by_min_time = Time.new(lt.year, lt.month, lt.day, lt.hour, lt.min, 0)
       end
       res[:chart_by_min] = get_candlestick_data(by_min_time, "%Y-%m-%d %H:%i:00")
 
       by_hour_time = settings.base_time - (48 * 3600)
+      p 7
       if by_hour_time < lt
         by_hour_time = Time.new(lt.year, lt.month, lt.day, lt.hour, 0, 0)
       end
       res[:chart_by_hour] = get_candlestick_data(by_hour_time, "%Y-%m-%d %H:00:00")
 
+      p 8
       lowest_sell_order = get_lowest_sell_order()
       res[:lowest_sell_price] = lowest_sell_order.fetch('price') if lowest_sell_order
       highest_buy_order = get_highest_buy_order()
       res[:highest_buy_price] = highest_buy_order.fetch('price') if highest_buy_order
 
+      p 9
       # TODO: trueにするとシェアボタンが有効になるが、アクセスが増えてヤバイので一旦falseにしておく
       res[:enable_share] = false
 
+      p 10
       %i(chart_by_hour chart_by_min chart_by_sec).each do |k|
         res[k].each do |cs|
           cs['time'] = cs.fetch('time').xmlschema
         end
       end
+      p 11
       res.to_json
     end
 
