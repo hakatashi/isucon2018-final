@@ -34,7 +34,7 @@ module Isucoin
       end
 
       def get_user_by_id_with_lock(id)
-        db.xquery('SELECT * FROM user WHERE id = ? FOR UPDATE', id).first
+        db.xquery('SELECT * FROM user WHERE id = ?', id).first
       end
     end
   end
