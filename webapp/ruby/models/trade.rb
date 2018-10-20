@@ -29,7 +29,11 @@ module Isucoin
         EOF
       end
 
-      def get_candlestick_data2(mt, tf)
+      def get_candlestick_data_sec(mt)
+        db.xquery(<<-EOF, mt).to_a
+          SELECT `date` AS time, open, close, high, low
+          FROM candle_by_sec WHERE `date` >= ? ORDER BY `date`;
+        EOF
       end
 
       def has_trade_chance_by_order(order_id)
