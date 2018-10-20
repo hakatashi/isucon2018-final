@@ -29,6 +29,9 @@ module Isucoin
         EOF
       end
 
+      def get_candlestick_data2(mt, tf)
+      end
+
       def has_trade_chance_by_order(order_id)
         order = get_order_by_id(order_id)
         raise Error.new("no order with id=#{order_id}", order_id) unless order
