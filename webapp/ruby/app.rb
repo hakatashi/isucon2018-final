@@ -247,10 +247,6 @@ module Isucoin
           price: order['trade_price'],
           created_at: order['trade_created_at']
         } if order['trade_price']
-        order.delete('user_name')
-        order.delete('trade_amount')
-        order.delete('trade_price')
-        order.delete('trade_created_at')
       end
 
 =begin
@@ -263,7 +259,7 @@ module Isucoin
       end
 =end
 
-      orders.to_json
+      orders.to_json(:except => ['user_name', 'trade_amount', 'trade_price', 'trade_created_at'])
     end
 
     delete '/order/:id', login_required: true do
