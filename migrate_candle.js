@@ -51,7 +51,7 @@ const day = require('dayjs');
 		value_s.push(`(STR_TO_DATE('${date}', '%Y-%m-%d %H:%i:%s'), ${high}, ${low}, ${recordMap.get(openId).split('\t')[2]}, ${recordMap.get(closeId).split('\t')[2]})`);
 	}
 
-	const query_s = `INSERT INTO candle_by_s (\`date\`, high, low, open, close) VALUES ${value_s.join(',')};`;
+	const query_s = `INSERT INTO candle_by_second (\`date\`, high, low, open, close) VALUES ${value_s.join(',')};`;
 	await promisify(fs.writeFile)('candle_by_s.sql', query_s);
 
 	const value_m = [];
@@ -60,7 +60,7 @@ const day = require('dayjs');
 		value_m.push(`(STR_TO_DATE('${date}', '%Y-%m-%d %H:%i:%s'), ${high}, ${low}, ${recordMap.get(openId).split('\t')[2]}, ${recordMap.get(closeId).split('\t')[2]})`);
 	}
 
-	const query_m = `INSERT INTO candle_by_s (\`date\`, high, low, open, close) VALUES ${value_m.join(',')};`;
+	const query_m = `INSERT INTO candle_by_minute (\`date\`, high, low, open, close) VALUES ${value_m.join(',')};`;
 	await promisify(fs.writeFile)('candle_by_m.sql', query_m);
 
 	const value_h = [];
@@ -70,6 +70,6 @@ const day = require('dayjs');
 		value_h.push(`(STR_TO_DATE('${date}', '%Y-%m-%d %H:%i:%s'), ${high}, ${low}, ${recordMap.get(openId).split('\t')[2]}, ${recordMap.get(closeId).split('\t')[2]})`);
 	}
 
-	const query_h = `INSERT INTO candle_by_s (\`date\`, high, low, open, close) VALUES ${value_h.join(',')};`;
+	const query_h = `INSERT INTO candle_by_hour (\`date\`, high, low, open, close) VALUES ${value_h.join(',')};`;
 	await promisify(fs.writeFile)('candle_by_h.sql', query_h);
 })();
