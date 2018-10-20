@@ -8,8 +8,7 @@ let queue = [];
 
 app.use(bodyParser.json());
 
-const sendLog = qrate(async (_, done) => {
-	console.log(queue, _);
+const sendLog = qrate(async ({app_id, endpoint}, done) => {
 	if (queue.length > 0) {
 		const payload = queue.slice(0, 5000);
 		queue = queue.slice(5000);
@@ -23,6 +22,8 @@ const sendLog = qrate(async (_, done) => {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${app_id}`,
 			},
+		}).catch((e) => {
+			console.log('send_bulk errored');
 		});
 		console.log(res.data);
 	} else {
