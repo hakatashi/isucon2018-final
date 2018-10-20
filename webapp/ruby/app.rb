@@ -19,7 +19,7 @@ module Isucoin
     # ISUCON用初期データの基準時間です
     # この時間以降のデータはinitializeで削除されます
     set :base_time, Time.new(2018, 10, 16, 10, 0, 0)
-    set :dump_errors, false
+    set :dump_errors, true
 
     helpers do
       include Isucoin::Models
