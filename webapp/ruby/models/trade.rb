@@ -139,7 +139,7 @@ module Isucoin
 
         target_orders.each do |to|
           begin
-            res = get_open_order_by_id_simultanously(order_id, to.fetch('id'))
+            res = get_open_order_by_id_simultaneously(order_id, to.fetch('id'))
             order = res[0]
             to = res[1]
           rescue OrderAlreadyClosed

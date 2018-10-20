@@ -20,8 +20,8 @@ module Isucoin
         order
       end
 
-      def get_open_order_by_id_simultanouesly(first_id, second_id)
-        orders = get_order_by_id_with_lock_simultanouesly(id)
+      def get_open_order_by_id_simultaneouesly(first_id, second_id)
+        orders = get_order_by_id_with_lock_simultaneouesly(id)
         raise Error.new("no order with id=#{first_id},#{second_id}") unless orders
 
         first_order = orders[0]
@@ -58,7 +58,7 @@ module Isucoin
         db.xquery('SELECT * FROM orders WHERE id = ? FOR UPDATE', id).first
       end
 
-      def get_order_by_id_with_lock_simultanously(first_id, second_id)
+      def get_order_by_id_with_lock_simultaneously(first_id, second_id)
         db.xquery('SELECT * FROM orders WHERE id = ? OR id = ? FOR UPDATE', first_id, second_id).to_a
       end
 
