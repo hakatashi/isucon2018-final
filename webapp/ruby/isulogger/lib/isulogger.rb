@@ -42,8 +42,8 @@ class Isulogger
     }.to_json
     req['Content-Type'] = 'application/json'
 
-    http = Net::HTTP.new('118.27.23.224', 3000)
-    http.use_ssl = endpoint.scheme == 'https'
+    http = Net::HTTP.new('172.16.57.4', 3000)
+    http.use_ssl = false
     res = http.start { http.request(req) }
 
     return [res.body, res.is_a?(Net::HTTPSuccess) ? nil : res.code]
