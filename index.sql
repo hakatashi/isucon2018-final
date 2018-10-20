@@ -68,3 +68,10 @@ CREATE TABLE failure (
 	UNIQUE KEY idx_bank_id (bank_id),
 	INDEX idx_count (count)
 );
+
+CREATE TABLE signup_failure (
+	bank_id varbinary(191) NOT NULL,
+	`count` TINYINT NOT NULL,
+	UNIQUE KEY idx_bank_id (bank_id),
+	INDEX idx_count (count)
+);

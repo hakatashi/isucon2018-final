@@ -95,13 +95,28 @@ module Isucoin
         halt 400, {code: 400, err: "all parameters are required"}.to_json
       end
 
+      response = db.xquery('SELECT count FROM signup_failure WHERE bank_id = ?', params[:bank_id])
+      failure_count = 0
+      if response.count > 0
+        failure_count = response.first.fetch('count')
+      end
+
+      if failure_count >= 8
+        e = TooManyFailures.new
+        halt 403, {code: 403, err: e.message}.to_json
+      end
+
       begin
         user_signup(params[:name], params[:bank_id], params[:password])
       rescue BankUserNotFound => e
+        db.xquery('INSERT INTO signup_failure (bank_id, `count`) VALUES (?, 1) ON DUPLICATE KEY UPDATE `count` = `count` + 1', params[:bank_id])
         halt 404, {code: 404, err: e.message}.to_json
       rescue BankUserConflict => e
+        db.xquery('INSERT INTO signup_failure (bank_id, `count`) VALUES (?, 1) ON DUPLICATE KEY UPDATE `count` = `count` + 1', params[:bank_id])
         halt 409, {code: 409, err: e.message}.to_json
       end
+
+      db.xquery('UPDATE IGNORE signup_failure SET `count` = 0 WHERE bank_id = ?', params[:bank_id])
 
       '{}'
     end
@@ -111,27 +126,14 @@ module Isucoin
         halt 400, {code: 400, err: "all parameters are required"}.to_json
       end
 
-      response = db.xquery('SELECT count FROM failure WHERE bank_id = ?', params[:bank_id])
-      failure_count = 0
-      if response.count > 0
-          failure_count = response.first.fetch('count')
-      end
-
-      if failure_count >= 5
-        e = TooManyFailures.new
-        halt 403, {code: 403, err: e.message}.to_json
-      end
-
       begin
         user = user_login(params[:bank_id], params[:password])
         session[:user_id] = user.fetch('id')
       rescue UserNotFound => e
         # TODO: 失敗が多いときに403を返すBanの仕様に対応
-        db.xquery('INSERT INTO failure (bank_id, `count`) VALUES (?, 1) ON DUPLICATE KEY UPDATE `count` = `count` + 1', params[:bank_id])
+        # 気にしない!!!!!!!!
         halt 404, {code: 404, err: e.message}.to_json
       end
-
-      db.xquery('UPDATE IGNORE failure SET `count` = 0 WHERE bank_id = ?', params[:bank_id])
 
       {
         id: user.fetch('id'),
