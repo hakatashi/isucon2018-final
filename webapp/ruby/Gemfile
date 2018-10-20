@@ -12,3 +12,5 @@ gem 'isubank', path: File.join(__dir__, 'isubank')
 group :development do
   gem 'sinatra-contrib'
 end
+
+gem 'sidekiq'
