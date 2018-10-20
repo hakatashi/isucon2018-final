@@ -69,9 +69,14 @@ module Isucoin
         db.query(q)
       end
 
-      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /candle/candle_by_s.sql`
-      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /candle/candle_by_m.sql`
-      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /candle/candle_by_h.sql`
+      host = ENV.fetch('ISU_DB_HOST', '127.0.0.1')
+      port = ENV.fetch('ISU_DB_PORT', '3306')
+      user = ENV.fetch('ISU_DB_USER', 'root')
+      passwd = ENV['ISU_DB_PASSWORD']
+      dbname = ENV.fetch('ISU_DB_NAME', 'isucoin')
+      `mysql -u #{host} -p #{passwd} --host #{host} --port #{port} #{dbname} < /candle/candle_by_s.sql`
+      `mysql -u #{host} -p #{passwd} --host #{host} --port #{port} #{dbname} < /candle/candle_by_m.sql`
+      `mysql -u #{host} -p #{passwd} --host #{host} --port #{port} #{dbname} < /candle/candle_by_h.sql`
 
       %i(
         bank_endpoint
