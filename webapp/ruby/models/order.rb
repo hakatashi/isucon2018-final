@@ -6,7 +6,7 @@ module Isucoin
       end
 
       def get_orders_by_user_id2(user_id)
-        db.xquery(<<-EOF, user_id)
+        db.xquery(<<-EOF, user_id, :symbolize_keys => true)
         SELECT
         o.id AS id,
         o.type AS type,
