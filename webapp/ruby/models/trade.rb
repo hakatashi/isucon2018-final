@@ -148,14 +148,14 @@ module Isucoin
       end
 
       def try_trade(order_id)
-        # order = get_open_order_by_id_without_lock(order_id)
-        order = get_open_order_by_id(order_id)
+        order = get_open_order_by_id_without_lock(order_id)
+        # order = get_open_order_by_id(order_id)
         rest_amount = order.fetch('amount')
         unit_price = order.fetch('price')
         reserves = []
         targets = []
 
-        reserves << reserve_order(order, unit_price)
+        # reserves << reserve_order(order, unit_price)
 
         target_orders = case order.fetch('type')
         when 'buy'
@@ -164,6 +164,9 @@ module Isucoin
           db.xquery('SELECT * FROM orders WHERE type = ? AND closed_at IS NULL AND price >= ? ORDER BY price DESC, created_at ASC, id ASC', 'buy', order.fetch('price')).to_a
         end
         raise NoOrderForTrade if target_orders.empty?
+
+        order = get_open_order_by_id(order_id)
+        reserves << reserve_order(order, unit_price)
 
         target_orders.each do |to|
           begin
