@@ -165,7 +165,7 @@ module Isucoin
       res[:highest_buy_price] = highest_buy_order.fetch('price') if highest_buy_order
 
       # TODO: trueにするとシェアボタンが有効になるが、アクセスが増えてヤバイので一旦falseにしておく
-      res[:enable_share] = false
+      res[:enable_share] = true
 
       %i(chart_by_hour chart_by_min chart_by_sec).each do |k|
         res[k].each do |cs|
