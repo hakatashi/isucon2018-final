@@ -14,8 +14,6 @@ services:
       - bundle:/bundle
       - ./ruby:/app
       - ./public:/public
-    ports:
-      - "5000:5000"
 
 volumes:
   bundle:

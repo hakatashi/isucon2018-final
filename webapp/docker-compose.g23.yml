@@ -9,5 +9,8 @@ services:
       ISU_DB_PASSWORD: 'isucon'
       ISU_DB_NAME:     'isucoin'
       ISU_PUBLIC_DIR:  '/public'
+    network_mode: "host"
+    ports:
+      - "5000:5000"
     volumes:
       - ./public:/public
