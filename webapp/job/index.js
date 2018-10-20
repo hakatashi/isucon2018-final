@@ -9,6 +9,7 @@ let queue = [];
 app.use(bodyParser.json());
 
 const sendLog = qrate(async (_, done) => {
+	console.log(queue, _);
 	if (queue.length > 0) {
 		const payload = queue.slice(0, 5000);
 		queue = queue.slice(5000);
@@ -32,10 +33,12 @@ const sendLog = qrate(async (_, done) => {
 
 app.post('/send_log', (req, res) => {
 	let payload = null;
+	console.log('/send_log:', req.body);
 	try {
 		payload = JSON.parse(req.body.payload);
 	} catch (e) {
 		console.error('invalid json');
+		res.sendStatus(400);
 		return;
 	}
 	queue.push(payload)
