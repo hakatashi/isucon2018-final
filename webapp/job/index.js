@@ -23,7 +23,7 @@ const sendLog = qrate(async ({app_id, endpoint}, done) => {
 				'Authorization': `Bearer ${app_id}`,
 			},
 		}).catch((e) => {
-			console.log(e);
+			console.log('send_bulk errored');
 		});
 		console.log(res.data);
 	} else {
