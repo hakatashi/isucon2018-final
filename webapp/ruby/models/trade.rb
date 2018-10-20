@@ -100,28 +100,46 @@ module Isucoin
 
         candle_sec = db.query('SELECT * FROM candle_by_sec WHERE `date`= NOW(0)')
         if candle_sec.count > 0
-          rec = candle_sec.first
-          high = [rec[:high], order['price']].max
-          low = [rec[:low], order['price']].min
-          db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low WHERE `date ` = NOW(0)', order['price'], high, low)
+          begin
+            rec = candle_sec.first
+            high = [rec[:high], order['price']].max
+            low = [rec[:low], order['price']].min
+            db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low WHERE `date ` = NOW(0)', order['price'], high, low)
+          rescue => ex
+            STDERR.puts "#{ex.backtrace}: #{ex.message} (#{ex.class})"
+            STDERR.puts candle_sec
+            STDERR.puts candle_sec.first
+          end
         else
           db.xquery('INSERT INTO candle_by_sec (`date`, open, close, high, low) VALUES (NOW(0), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
         end
         candle_min = db.query('SELECT * FROM candle_by_min WHERE `date`= STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s")')
         if candle_min.count > 0
-          rec = candle_min.first
-          high = [rec[:high], order['price']].max
-          low = [rec[:low], order['price']].min
-          db.xquery('UPDATE candle_by_min SET close = ?, high = ?, low WHERE `date ` = STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s")', order['price'], high, low)
+          begin
+            rec = candle_min.first
+            high = [rec[:high], order['price']].max
+            low = [rec[:low], order['price']].min
+            db.xquery('UPDATE candle_by_min SET close = ?, high = ?, low WHERE `date ` = STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s")', order['price'], high, low)
+          rescue => ex
+            STDERR.puts "#{ex.backtrace}: #{ex.message} (#{ex.class})"
+            STDERR.puts candle_sec
+            STDERR.puts candle_sec.first
+          end
         else
           db.xquery('INSERT INTO candle_by_min (`date`, open, close, high, low) VALUES (STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s"), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
         end
         candle_hour = db.query('SELECT * FROM candle_by_hour WHERE `date`= STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s")')
         if candle_hour.count > 0
-          rec = candle_hour.first
-          high = [rec[:high], order['price']].max
-          low = [rec[:low], order['price']].min
-          db.xquery('UPDATE candle_by_hour SET close = ?, high = ?, low WHERE `date ` = STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s")', order['price'], high, low)
+          begin
+            rec = candle_hour.first
+            high = [rec[:high], order['price']].max
+            low = [rec[:low], order['price']].min
+            db.xquery('UPDATE candle_by_hour SET close = ?, high = ?, low WHERE `date ` = STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s")', order['price'], high, low)
+          rescue => ex
+            STDERR.puts "#{ex.backtrace}: #{ex.message} (#{ex.class})"
+            STDERR.puts candle_sec
+            STDERR.puts candle_sec.first
+          end
         else
           db.xquery('INSERT INTO candle_by_hour (`date`, open, close, high, low) VALUES (STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s"), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
         end
