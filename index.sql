@@ -28,6 +28,7 @@ CREATE TABLE candle_by_sec (
 	close bigint(20) NOT NULL,
 	high bigint(20) NOT NULL,
 	low bigint(20) NOT NULL,
+	PRIMARY KEY (`date`),
 	INDEX idx_date (`date`),
 	INDEX idx_open (open),
 	INDEX idx_close (close),
