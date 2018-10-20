@@ -91,9 +91,9 @@ module Isucoin
             db.xquery('INSERT INTO candle_by_sec (`date`, open, close, high, low) VALUES (NOW(0), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
           end
         rescue => e
-          p e
-          p candle_sec
-          p candle_sec.first
+          STDERR.puts e
+          STDERR.puts candle_sec
+          STDERR.puts candle_sec.first
         end
 
         send_log("trade",
