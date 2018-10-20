@@ -8,6 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const sendLog = qrate(async ({endpoint, app_id, payload}, done) => {
+	console.log({endpoint, app_id, payload});
 	const res = await axios({
 		method: 'post',
 		url: '/send',
