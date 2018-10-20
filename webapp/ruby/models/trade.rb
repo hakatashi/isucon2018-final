@@ -77,6 +77,15 @@ module Isucoin
         db.xquery('INSERT INTO trade (amount, price, created_at) VALUES (?, ?, NOW(6))', order.fetch('amount'), order.fetch('price'))
         trade_id = db.last_id
 
+        candle_sec = db.xquery('SELECT * FROM candle_by_sec WHERE `date`= NOW(0)')
+        if candle_sec
+          high = [candle_sec[:high], order['price']].max
+          low = [candle_sec[:low], order['price']].min
+          db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low WHERE `date ` = NOW(0)', order['price'], high, low)
+        else
+          db.xquery('INSERT INTO candle_by_sec (`date`, open, close, high, low) VALUES (NOW(0), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
+        end
+
         send_log("trade",
           trade_id: trade_id,
           price: order['price'],
