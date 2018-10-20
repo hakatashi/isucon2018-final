@@ -22,7 +22,7 @@ module Isucoin
         DATE_FORMAT(t.created_at, '%Y-%m-%dT%TZ') AS trade_created_at
         FROM orders o
         JOIN user u ON o.user_id = u.id
-        JOIN trade t ON o.trade_id = t.id
+        LEFT OUTER JOIN trade t ON o.trade_id = t.id
         WHERE o.user_id = ? AND (o.closed_at IS NULL OR o.trade_id IS NOT NULL)
         ORDER BY o.created_at ASC;
         EOF
