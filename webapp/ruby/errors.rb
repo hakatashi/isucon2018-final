@@ -8,6 +8,7 @@ module Isucoin
   class CreditInsufficient < Error; def initialize(*); super "銀行の残高が足りません"; end; end
   class ParameterInvalid < Error; def initialize(*); super "parameter invalid"; end; end
   class NoOrderForTrade < Error; def initialize(*); super "no order for trade"; end; end
+  class TooManyFailures < Error; def initialize(*); super "too many failures"; end; end
 
   class NotAuthenticated < Error; def initialize(*); super "Not authenticated"; end; end
 end
