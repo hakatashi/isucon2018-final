@@ -65,6 +65,6 @@ CREATE TABLE candle_by_hour (
 CREATE TABLE failure (
 	bank_id varbinary(191) NOT NULL,
 	`count` TINYINT NOT NULL,
-	INDEX idx_bank_id (bank_id),
+	UNIQUE KEY idx_bank_id (bank_id),
 	INDEX idx_count (count)
 );
