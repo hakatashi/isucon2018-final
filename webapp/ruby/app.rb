@@ -62,6 +62,9 @@ module Isucoin
         "DELETE FROM orders WHERE created_at >= '2018-10-16 10:00:00'",
         "DELETE FROM trade WHERE created_at >= '2018-10-16 10:00:00'",
         "DELETE FROM user WHERE created_at >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_sec WHERE `date` >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_min WHERE `date` >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_hour WHERE `date` >= '2018-10-16 10:00:00'",
       ].each do |q|
         db.query(q)
       end
@@ -145,7 +148,8 @@ module Isucoin
       if by_sec_time < lt
         by_sec_time = Time.new(lt.year, lt.month, lt.day, lt.hour, lt.min, lt.sec)
       end
-      res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
+      #res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
+      res[:chart_by_sec] = get_candlestick_data_sec(by_sec_time)
 
       by_min_time = settings.base_time - (300 * 60)
       if by_min_time < lt
