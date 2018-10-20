@@ -20,8 +20,8 @@ module Isucoin
         order
       end
 
-      def get_open_order_by_id_simultaneouesly(first_id, second_id)
-        orders = get_order_by_id_with_lock_simultaneouesly(id)
+      def get_open_order_by_id_simultaneously(first_id, second_id)
+        orders = get_order_by_id_with_lock_simultaneously(id)
         raise Error.new("no order with id=#{first_id},#{second_id}") unless orders
 
         first_order = orders[0]
