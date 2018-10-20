@@ -15,7 +15,7 @@ const day = require('dayjs');
 		const [rawId, amount, rawPrice, date] = record.split('\t');
 		const id = parseInt(rawId);
 		const price = parseInt(rawPrice);
-		const time = day(date.replace(' ', 'T') + 'Z');
+		const time = day(date.replace(' ', 'T') + '+0900');
 
 		recordMap.set(id, record);
 
