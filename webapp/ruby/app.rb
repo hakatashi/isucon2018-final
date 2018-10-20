@@ -111,9 +111,13 @@ module Isucoin
         halt 400, {code: 400, err: "all parameters are required"}.to_json
       end
 
-      failure_count = db.xquery('SELECT count FROM failure WHERE bank_id = ?', params[:bank_id]).first.fetch('count')
+      response = db.xquery('SELECT count FROM failure WHERE bank_id = ?', params[:bank_id])
+      failure_count = 0
+      if response.count > 0
+          failure_count = response.first.fetch('count')
+      end
 
-      if !failure_count.nil? && failure_count >= 5
+      if failure_count >= 5
         e = TooManyFailures.new
         halt 403, {code: 403, err: e.message}.to_json
       end
