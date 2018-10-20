@@ -1,0 +1,13 @@
+version: '2'
+services:
+  isucoin:
+    environment:
+      ISU_APP_PORT:    '5000'
+      ISU_DB_HOST:     '172.16.57.1'
+      ISU_DB_PORT:     '13306'
+      ISU_DB_USER:     'isucon'
+      ISU_DB_PASSWORD: 'isucon'
+      ISU_DB_NAME:     'isucoin'
+      ISU_PUBLIC_DIR:  '/public'
+    volumes:
+      - ./public:/public
