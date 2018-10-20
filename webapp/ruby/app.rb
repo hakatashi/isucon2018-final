@@ -69,9 +69,9 @@ module Isucoin
         db.query(q)
       end
 
-      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /home/isucon/isucon2018-final/candle_by_s.sql`
-      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /home/isucon/isucon2018-final/candle_by_m.sql`
-      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /home/isucon/isucon2018-final/candle_by_h.sql`
+      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /candle/candle_by_s.sql`
+      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /candle/candle_by_m.sql`
+      `mysql -uroot -proot --host 127.0.0.1 --port 13306 isucoin < /candle/candle_by_h.sql`
 
       %i(
         bank_endpoint
