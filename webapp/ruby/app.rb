@@ -238,17 +238,19 @@ module Isucoin
       #orders = get_orders_by_user_id(user.fetch('id')).to_a
       orders = get_orders_by_user_id2(user.fetch('id')).to_a
       orders.each do |order|
-        order[:user] = {id: order[:user_id], name: order[:user_name]}
-        order[:trade] = {
-          id: order[:trade_id],
-          amount: order[:trade_amount],
-          price: order[:trade_price],
-          created_at: order[:trade_created_at]
-        } if order[:trade_created_at]
-        order.delete(:user_name)
-        order.delete(:trade_amount)
-        order.delete(:trade_price)
-        order.delete(:trade_created_at)
+        order['user'] = {
+          id: order['user_id'], name: order['user_name']
+        } if order['user_name']
+        order['trade'] = {
+          id: order['trade_id'],
+          amount: order['trade_amount'],
+          price: order['trade_price'],
+          created_at: order['trade_created_at']
+        } if order['trade_created_at']
+        order.delete('user_name')
+        order.delete('trade_amount')
+        order.delete('trade_price')
+        order.delete('trade_created_at')
       end
 
 =begin
