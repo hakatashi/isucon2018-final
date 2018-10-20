@@ -224,7 +224,7 @@ module Isucoin
       #orders = get_orders_by_user_id(user.fetch('id')).to_a
       orders = get_orders_by_user_id2(user.fetch('id')).to_a
       orders.each do |order|
-        order[:user] = {id: order[:user_id], name: order[:user_name]} if order[:user_name]
+        order[:user] = {id: order[:user_id], name: order[:user_name]}
         order[:trade] = {
           id: order[:trade_id],
           amount: order[:trade_amount],
