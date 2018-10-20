@@ -62,6 +62,9 @@ module Isucoin
         "DELETE FROM orders WHERE created_at >= '2018-10-16 10:00:00'",
         "DELETE FROM trade WHERE created_at >= '2018-10-16 10:00:00'",
         "DELETE FROM user WHERE created_at >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_sec WHERE `date` >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_min WHERE `date` >= '2018-10-16 10:00:00'",
+        "DELETE FROM candle_by_hour WHERE `date` >= '2018-10-16 10:00:00'",
       ].each do |q|
         db.query(q)
       end
@@ -145,19 +148,22 @@ module Isucoin
       if by_sec_time < lt
         by_sec_time = Time.new(lt.year, lt.month, lt.day, lt.hour, lt.min, lt.sec)
       end
-      res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
+      #res[:chart_by_sec] = get_candlestick_data(by_sec_time, "%Y-%m-%d %H:%i:%s")
+      res[:chart_by_sec] = get_candlestick_data_sec(by_sec_time)
 
       by_min_time = settings.base_time - (300 * 60)
       if by_min_time < lt
         by_min_time = Time.new(lt.year, lt.month, lt.day, lt.hour, lt.min, 0)
       end
-      res[:chart_by_min] = get_candlestick_data(by_min_time, "%Y-%m-%d %H:%i:00")
+      #res[:chart_by_min] = get_candlestick_data(by_min_time, "%Y-%m-%d %H:%i:00")
+      res[:chart_by_min] = get_candlestick_data_min(by_min_time)
 
       by_hour_time = settings.base_time - (48 * 3600)
       if by_hour_time < lt
         by_hour_time = Time.new(lt.year, lt.month, lt.day, lt.hour, 0, 0)
       end
-      res[:chart_by_hour] = get_candlestick_data(by_hour_time, "%Y-%m-%d %H:00:00")
+      #res[:chart_by_hour] = get_candlestick_data(by_hour_time, "%Y-%m-%d %H:00:00")
+      res[:chart_by_hour] = get_candlestick_data_hour(by_hour_time)
 
       lowest_sell_order = get_lowest_sell_order()
       res[:lowest_sell_price] = lowest_sell_order.fetch('price') if lowest_sell_order

@@ -23,7 +23,7 @@ class Isulogger
   # @return [NilClass]
   # @raise [Error]
   def send(tag, data)
-    response, err = request('/send', tag: tag, time: Time.now.xmlschema, data: data)
+    response, err = request('/send_log', tag: tag, time: Time.now.xmlschema, data: data)
     unless err
       return nil
     end
@@ -35,12 +35,15 @@ class Isulogger
 
   def request(path, payload)
     req = Net::HTTP::Post.new(path)
-    req.body = payload.to_json
+    req.body = {
+      endpoint: endpoint,
+      app_id: app_id,
+      payload: payload.to_json,
+    }.to_json
     req['Content-Type'] = 'application/json'
-    req['Authorization'] = "Bearer #{app_id}"
 
-    http = Net::HTTP.new(endpoint.host, endpoint.port)
-    http.use_ssl = endpoint.scheme == 'https'
+    http = Net::HTTP.new('172.16.57.4', 3000)
+    http.use_ssl = false
     res = http.start { http.request(req) }
 
     return [res.body, res.is_a?(Net::HTTPSuccess) ? nil : res.code]

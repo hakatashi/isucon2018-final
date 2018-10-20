@@ -29,7 +29,25 @@ module Isucoin
         EOF
       end
 
-      def get_candlestick_data2(mt, tf)
+      def get_candlestick_data_sec(mt)
+        db.xquery(<<-EOF, mt).to_a
+          SELECT `date` AS time, open, close, high, low
+          FROM candle_by_sec WHERE `date` >= ? ORDER BY `date`;
+        EOF
+      end
+
+      def get_candlestick_data_min(mt)
+        db.xquery(<<-EOF, mt).to_a
+          SELECT `date` AS time, open, close, high, low
+          FROM candle_by_min WHERE `date` >= ? ORDER BY `date`;
+        EOF
+      end
+
+      def get_candlestick_data_hour(mt)
+        db.xquery(<<-EOF, mt).to_a
+          SELECT `date` AS time, open, close, high, low
+          FROM candle_by_hour WHERE `date` >= ? ORDER BY `date`;
+        EOF
       end
 
       def has_trade_chance_by_order(order_id)
@@ -81,20 +99,33 @@ module Isucoin
         trade_id = db.last_id
 
         candle_sec = db.query('SELECT * FROM candle_by_sec WHERE `date`= NOW(0)')
-        begin
-          if candle_sec.count > 0
+        if candle_sec.count > 0
             rec = candle_sec.first
-            high = [rec[:high], order['price']].max
-            low = [rec[:low], order['price']].min
-            db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low WHERE `date ` = NOW(0)', order['price'], high, low)
-          else
-            db.xquery('INSERT INTO candle_by_sec (`date`, open, close, high, low) VALUES (NOW(0), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
-          end
-        rescue => e
-          p e
-          p candle_sec
-          p candle_sec.first
+            high = [rec['high'], order['price']].max
+            low = [rec['low'], order['price']].min
+            db.xquery('UPDATE candle_by_sec SET close = ?, high = ?, low = ? WHERE `date` = NOW(0)', order['price'], high, low)
+        else
+          db.xquery('INSERT INTO candle_by_sec (`date`, open, close, high, low) VALUES (NOW(0), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
         end
+        candle_min = db.query('SELECT * FROM candle_by_min WHERE `date`= STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s")')
+        if candle_min.count > 0
+            rec = candle_min.first
+            high = [rec['high'], order['price']].max
+            low = [rec['low'], order['price']].min
+            db.xquery('UPDATE candle_by_min SET close = ?, high = ?, low = ? WHERE `date` = STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s")', order['price'], high, low)
+        else
+          db.xquery('INSERT INTO candle_by_min (`date`, open, close, high, low) VALUES (STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:%i:00"), "%Y-%m-%d %H:%i:%s"), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
+        end
+        candle_hour = db.query('SELECT * FROM candle_by_hour WHERE `date`= STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s")')
+        if candle_hour.count > 0
+            rec = candle_hour.first
+            high = [rec['high'], order['price']].max
+            low = [rec['low'], order['price']].min
+            db.xquery('UPDATE candle_by_hour SET close = ?, high = ?, low = ? WHERE `date` = STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s")', order['price'], high, low)
+        else
+          db.xquery('INSERT INTO candle_by_hour (`date`, open, close, high, low) VALUES (STR_TO_DATE(DATE_FORMAT(NOW(0), "%Y-%m-%d %H:00:00"), "%Y-%m-%d %H:%i:%s"), ?, ?, ?, ?)', order['price'], order['price'], order['price'], order['price'])
+        end
+        
 
         send_log("trade",
           trade_id: trade_id,
@@ -117,13 +148,14 @@ module Isucoin
       end
 
       def try_trade(order_id)
-        order = get_open_order_by_id(order_id)
+        order = get_open_order_by_id_without_lock(order_id)
+        # order = get_open_order_by_id(order_id)
         rest_amount = order.fetch('amount')
         unit_price = order.fetch('price')
         reserves = []
         targets = []
 
-        reserves << reserve_order(order, unit_price)
+        # reserves << reserve_order(order, unit_price)
 
         target_orders = case order.fetch('type')
         when 'buy'
@@ -133,8 +165,14 @@ module Isucoin
         end
         raise NoOrderForTrade if target_orders.empty?
 
+        order = get_open_order_by_id(order_id)
+        reserves << reserve_order(order, unit_price)
+
         target_orders.each do |to|
           begin
+            # res = get_open_order_by_id_simultaneously(order_id, to.fetch('id'))
+            # order = res[0]
+            # to = res[1]
             to = get_open_order_by_id(to.fetch('id'))
           rescue OrderAlreadyClosed
             next
