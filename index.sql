@@ -6,6 +6,10 @@ CREATE INDEX idx_price ON isucoin.orders (price) USING BTREE;
 CREATE INDEX idx_closed_at ON isucoin.orders (closed_at) USING BTREE;
 CREATE INDEX idx_trade_id ON isucoin.orders (trade_id) USING BTREE;
 CREATE INDEX idx_created_at ON isucoin.orders (created_at) USING BTREE;
+CREATE INDEX idx_user_id_closed_at_trade_id ON isucoin.orders (user_id, closed_at, trade_id) USING BTREE;
+CREATE INDEX idx_user_id_trade_id ON isucoin.orders (user_id, trade_id) USING BTREE;
+CREATE INDEX idx_type_closed_at ON isucoin.orders (type, closed_at) USING BTREE;
+CREATE INDEX idx_type_closed_at_price ON isucoin.orders (type, closed_at, price) USING BTREE;
 
 CREATE INDEX idx_id ON isucoin.trade (id) USING BTREE;
 CREATE INDEX idx_amount ON isucoin.trade (amount) USING BTREE;
